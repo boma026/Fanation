@@ -1,7 +1,38 @@
+'use client';
+
+import { useState } from 'react';
+
 export default function Home() {
+  const [senha, setSenha] = useState('');
+  const [erro, setErro] = useState('');
+
+  const handleLogin = async () => {
+    setErro('');
+    try {
+      const res = await fetch('http://localhost:4000/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ senha }),
+      });
+
+      const data = await res.json();
+
+      if (res.ok && data.token) {
+        localStorage.setItem('token', data.token);
+        window.location.href = '/dashboard'; // Redireciona após login
+      } else {
+        setErro(data.error || 'Falha no login');
+      }
+    } catch (err) {
+      console.error(err);
+      setErro('Erro ao conectar com o servidor');
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-[calc(100vh-64px)] px-4">
-      {/* Conteúdo principal centralizado */}
       <main className="flex-grow flex items-center justify-center">
         <div className="w-full max-w-sm text-center">
           <img src="/Group.svg" alt="Fanation" className="mx-auto h-8 mb-3" />
@@ -22,18 +53,24 @@ export default function Home() {
             <input
               type="password"
               id="senha"
+              value={senha}
+              onChange={(e) => setSenha(e.target.value)}
               placeholder="Digite sua senha"
               className="mt-1 w-full border border-[#E5E5EA] rounded-md px-3 py-2 outline-none focus:ring-2 focus:ring-purple-600"
             />
           </div>
 
-          <button className="w-full mt-4 bg-black text-white py-2 rounded-md hover:opacity-90">
+          {erro && <p className="text-red-500 text-sm mt-2">{erro}</p>}
+
+          <button
+            onClick={handleLogin}
+            className="w-full mt-4 bg-black text-white py-2 rounded-md hover:opacity-90"
+          >
             Acessar
           </button>
         </div>
       </main>
 
-      {/* Rodapé fixado ao final da tela */}
       <footer className="text-center text-xs text-gray-400 py-4">
         Desenvolvido pela <span className="font-semibold">SeuBoné</span>
       </footer>

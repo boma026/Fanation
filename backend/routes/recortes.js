@@ -1,15 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const { PrismaClient } = require('@prisma/client');
+const autenticarToken = require('../middlewares/authMiddleware'); // CORRIGIDO O CAMINHO
 const prisma = new PrismaClient();
 
-// GET /recortes - listar todos
-router.get('/', async (req, res) => {
-  const recortes = await prisma.recorte.findMany();
-  res.json(recortes);
+// GET /recortes - protegido com autenticação
+router.get('/', autenticarToken, async (req, res) => {
+  try {
+    const recortes = await prisma.recorte.findMany();
+    res.json(recortes);
+  } catch (error) {
+    console.error('Erro ao buscar recortes:', error);
+    res.status(500).json({ error: 'Erro ao buscar recortes' });
+  }
 });
 
-// POST /recortes - criar novo recorte
+// POST /recortes - criar novo recorte (você pode proteger aqui também se quiser)
 router.post('/', async (req, res) => {
   try {
     const {
