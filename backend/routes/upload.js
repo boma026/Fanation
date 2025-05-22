@@ -9,28 +9,31 @@ const upload = multer({ storage: multer.memoryStorage() });
 router.post('/', upload.single('imagem'), async (req, res) => {
   try {
     const file = req.file;
-    const nomeArquivo = `${uuidv4()}-${file.originalname}`;
+    if (!file) {
+      return res.status(400).json({ error: 'Imagem é obrigatória' });
+    }
 
+    const nomeArquivo = `${uuidv4()}-${file.originalname}`;
     const blob = bucket.file(`assets/${nomeArquivo}`);
+
     const blobStream = blob.createWriteStream({
       resumable: false,
-      metadata: {
-        contentType: file.mimetype
-      }
+      metadata: { contentType: file.mimetype },
     });
 
     blobStream.on('error', (err) => {
       console.error(err);
-      res.status(500).send({ error: 'Erro ao fazer upload da imagem' });
+      res.status(500).json({ error: 'Erro ao fazer upload da imagem' });
     });
 
-    blobStream.on('finish', async () => {
-      const publicUrl = `https://storage.googleapis.com/${bucket.name}/assets/${nomeArquivo}`;
-      res.status(200).send({ imageUrl: publicUrl });
+    blobStream.on('finish', () => {
+      const imagemUrl = `https://storage.googleapis.com/${bucket.name}/assets/${nomeArquivo}`;
+      res.status(200).json({ imageUrl: imagemUrl });
     });
 
     blobStream.end(file.buffer);
-  } catch (err) {
+  } catch (error) {
+    console.error(error);
     res.status(500).json({ error: 'Erro interno no servidor' });
   }
 });

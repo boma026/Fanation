@@ -18,15 +18,16 @@ model Usuario {
 }
 
 model Recorte {
-  id             String   @id @default(uuid())
-  nomeModelo     String
-  ordemExibicao  Int
-  sku            String   @unique
-  tipoRecorte    String
-  posicao        String
-  tipoProduto    String
-  material       String
-  cor            String
-  imagemUrl      String
-  criadoEm       DateTime @default(now())
+  id            String   @id @default(uuid())
+  chave         String   @unique 
+  nomeModelo    String
+  ordemExibicao Int
+  sku           String
+  tipoRecorte   String
+  posicao       String?
+  tipoProduto   String?
+  material      String
+  cor           String
+  imagemUrl     String?
+  ativo         Boolean  @default(true)
 }
