@@ -1,78 +1,105 @@
-Fanation
+# 🧢 Fanation
 
-Sistema de Criação de Modelos de bonés com Montagem de Imagens
+Sistema de Criação de Modelos de Bonés com Montagem de Imagens
 
-O Fanation é uma aplicação web desenvolvida para facilitar a criação e gerenciamento de modelos personalizados com montagem de imagens. O sistema permite que usuários criem peças visuais combinando diferentes tipos de recorte (aba,frente,lateral) de modelos de boné , como materiais, cores e tipos, de forma intuitiva e eficiente.
+O Fanation é uma aplicação web desenvolvida para facilitar a criação e o gerenciamento de modelos personalizados de bonés. O sistema permite que usuários combinem diferentes tipos de recortes (aba, frente, lateral), materiais, cores e estilos, montando visualmente suas peças de forma prática e intuitiva.
 
-🚀 Tecnologias Utilizadas:
+## 🚀 Tecnologias Utilizadas
 
-    Frontend: React com TypeScript
+    Frontend: React + TypeScript
 
-    Backend: Node.js com Express
+    Backend: Node.js + Express
 
     Estilização: Tailwind CSS
 
     Gerenciamento de Estado: React Hooks (useState, useEffect)
 
-    Upload de Imagens: Manipulação via FormData e fetch API, com integração com o banco de dados postgreSQL e com a nuvem Cloudnary
+    Upload de Imagens: FormData + fetch API com integração:
 
-    Autenticação: Token JWT armazenado no localStorage
-    GitHub+5GitHub+5GitHub+5
-    GitHub+3Microsoft Learn+3GitHub+3
+        Banco de dados PostgreSQL
 
-📁 Estrutura do Projeto:
+        Armazenamento em nuvem via Cloudinary
 
-  Fanation/
-  ├── backend/
-  │   └── ... (código do servidor e rotas da API)
-  ├── front-end/
-  │   ├── components/
-  │   │   └── RecorteForm.tsx
-  │   ├── pages/
-  │   │   └── nova-peca.tsx
-  │   └── services/
-  │       └── recortes.ts
-  ├── package.json
-  └── README.md
-  
-⚙️ Instalação e Execução
+    Autenticação: JWT com token armazenado no localStorage
 
-    Clone o repositório:
+## 📁 Estrutura do Projeto
+```
+Fanation/
+├── backend/
+│   ├── config/
+│   ├── middleware/
+│   ├── prisma/
+│   ├── routes/
+│   └── index.js
+│
+├── front-end/
+│   ├── public/
+│   └── src/
+│       ├── app/
+│       ├── components/
+│       ├── lib/
+│       └── services/
+```
 
-    git clone https://github.com/boma026/Fanation.git
+## ⚙️ Instalação e Execução
+1. Clone o repositório
 
-    Instale as dependências do frontend e backend:
+git clone https://github.com/boma026/Fanation.git
 
-    cd Fanation/front-end
-    npm install
+2. Instale as dependências
 
-    cd ../backend
-    npm install
+### Frontend
+cd Fanation/front-end
+npm install
 
-    Configure as variáveis de ambiente:
+### Backend
+cd ../backend
+npm install
 
-    Crie um arquivo .env em ambos os diretórios (front-end e backend) com as variáveis necessárias, como NEXT_PUBLIC_API_URL no frontend e configurações de porta e banco de dados no backend.
+3. Configure as variáveis de ambiente
 
-    Inicie o servidor backend:
+Crie um arquivo .env nos diretórios backend/ e front-end/ com os dados apropriados.
 
-    cd backend
-    node index.js
+Exemplo - backend/.env:
 
-    Inicie o frontend:
+PORT=5000
+DATABASE_URL=postgres://user:password@localhost:5432/fanation
+CLOUDINARY_URL=cloudinary://API_KEY:API_SECRET@cloud_name
+JWT_SECRET=sua_chave_secreta
 
-    cd front-end
-    npm run dev
+Exemplo - front-end/.env:
 
-    Acesse a aplicação:
+NEXT_PUBLIC_API_URL=http://localhost:5000
 
-    Abra o navegador e vá para http://localhost:3000 para utilizar o sistema.
+4. Inicie os servidores
 
-📝 Funcionalidades
+### Backend
+cd backend
+node index.js
 
-    Criação de modelos personalizados com seleção de tipo de recorte, material e cor.
+### Frontend
+cd ../front-end
+npm run dev
 
-    Upload de imagens para visualização e associação aos modelos.
 
-    Geração automática de chave identificadora baseada nas características do modelo.
+5. Acesse a aplicação
 
-    Formulário dinâmico com validações e feedback ao usuário.
+Abra no navegador:
+
+http://localhost:3000
+
+## 📝 Funcionalidades
+
+    ✅ Criação de modelos de bonés personalizados
+
+    ✅ Seleção de tipo de recorte (aba, frente, lateral)
+
+    ✅ Escolha de material e cor do tecido
+
+    ✅ Upload de imagens com pré-visualização
+
+    ✅ Geração automática de chave identificadora única (SKU)
+
+    ✅ Formulário com validações e feedback ao usuário
+
+    ✅ Autenticação por token JWT
