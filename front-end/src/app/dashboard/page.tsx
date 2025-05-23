@@ -93,18 +93,18 @@ export default function DashboardPage() {
   );
 
   return (
-    <main className="p-6">
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-xl font-semibold">Peças Gerais</h1>
+    <main className="p-4 sm:p-6">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+        <h1 className="text-lg sm:text-xl font-semibold">Peças Gerais</h1>
         <button
-          className="bg-black text-white px-4 py-2 rounded font-medium"
+          className="bg-black text-white px-4 py-2 rounded font-medium w-full sm:w-auto"
           onClick={() => router.push('/dashboard/pecas/nova')}
         >
           Adicionar peça
         </button>
       </div>
 
-      <div className="flex gap-2 mb-4">
+      <div className="flex flex-wrap gap-2 mb-4">
         <button className="px-3 py-1 border rounded text-sm">Todos ({recortes.length})</button>
         <button className="px-3 py-1 border rounded bg-black text-white text-sm">
           Ativos ({recortes.filter(r => r.ativo).length})
@@ -115,27 +115,26 @@ export default function DashboardPage() {
       </div>
 
       <div className="flex justify-end mb-4">
-        <div className="flex gap-2">
+        <div className="flex w-full sm:w-auto gap-2">
           <input
             type="text"
             placeholder="Buscar"
-            className="p-2 border rounded text-sm w-64"
+            className="p-2 border rounded text-sm w-full sm:w-64"
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
           />
-          <button className="bg-black text-white px-3 py-2 rounded text-sm">🔍</button>
         </div>
       </div>
 
-      <div className="rounded-xl border border-gray-200 overflow-hidden shadow-sm">
-        <table className="w-full text-sm">
+      <div className="overflow-x-auto rounded-xl border border-gray-200 shadow-sm">
+        <table className="min-w-[640px] w-full text-sm">
           <thead className="bg-gray-50">
             <tr>
               <th className="p-3 text-left font-medium text-gray-700">Imagem</th>
               <th className="p-3 text-left font-medium text-gray-700">Título</th>
               <th className="p-3 text-left font-medium text-gray-700">SKU</th>
               <th className="p-3 text-left font-medium text-gray-700">Tipo</th>
-              <th className="p-3 text-left font-medium text-gray-700">Ordem de exibição</th>
+              <th className="p-3 text-left font-medium text-gray-700">Ordem</th>
               <th className="p-3 text-left font-medium text-gray-700">Status</th>
               <th className="p-3 text-left font-medium text-gray-700">Ações</th>
             </tr>
