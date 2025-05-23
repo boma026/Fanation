@@ -7,10 +7,11 @@ import { FormDataRecorte, createRecorte } from '@/services/recortes';
 export default function NovaPecaPage() {
   const router = useRouter();
 
+  // Função chamada quando o formulário for enviado
   const handleSubmit = async (data: FormDataRecorte) => {
     const token = localStorage.getItem('token');
     try {
-      await createRecorte(data, token ?? undefined);
+      await createRecorte(data, token ?? undefined); // se o token for nulo, passa undefined
       router.push('/dashboard');
     } catch (error) {
       console.error('Erro ao criar recorte:', error);

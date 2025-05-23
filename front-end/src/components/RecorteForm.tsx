@@ -5,7 +5,7 @@ import { FormDataRecorte } from '@/services/recortes';
 
 interface RecorteFormProps {
   onSubmit: (data: FormDataRecorte) => Promise<void>;
-  initialData?: FormDataRecorte;
+  initialData?: FormDataRecorte; //dados iniciais so no modo de ediçao
 }
 
 export default function RecorteForm({ onSubmit, initialData }: RecorteFormProps) {
@@ -23,24 +23,27 @@ export default function RecorteForm({ onSubmit, initialData }: RecorteFormProps)
     }
   );
 
+  // Estado de loading pra upload de imagem
   const [loadingUpload, setLoadingUpload] = useState(false);
 
+  // Se tiver InitialData (em edição) ele e atualizado
   useEffect(() => {
     if (initialData) {
       setFormData(initialData);
     }
   }, [initialData]);
 
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    const { name, value } = e.target;
+    const { name, value } = e.target; //extrai o nome e valor do input
     setFormData(prev => ({
       ...prev,
-      [name]: name === 'ordemExibicao' ? Number(value) : value,
+      [name]: name === 'ordemExibicao' ? Number(value) : value, //transforma em number pq vem como uma string
     }));
   };
 
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+    const file = e.target.files?.[0]; // pega o primeiro valor da lista se tiver
     if (!file) return;
 
     try {
@@ -50,7 +53,7 @@ export default function RecorteForm({ onSubmit, initialData }: RecorteFormProps)
       formDataUpload.append('imagem', file);
 
       const token = localStorage.getItem('token');
-
+      // envio da imagem para o back  
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/upload`, {
         method: 'POST',
         headers: {
@@ -65,6 +68,7 @@ export default function RecorteForm({ onSubmit, initialData }: RecorteFormProps)
 
       const data = await response.json();
 
+      //atualiza o campo imagemUTL com a URL do back
       setFormData(prev => ({
         ...prev,
         imagemUrl: data.imageUrl || data.imagemUrl || '',
@@ -77,6 +81,7 @@ export default function RecorteForm({ onSubmit, initialData }: RecorteFormProps)
     }
   };
 
+  // envia o formulario completo
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
@@ -87,10 +92,12 @@ export default function RecorteForm({ onSubmit, initialData }: RecorteFormProps)
     }
   };
 
+  //gerar a key com bases nos campos
   const chave = `${formData.tipoRecorte}-${formData.nomeModelo}-${formData.material}-${formData.cor}`
     .toLowerCase()
     .replace(/\s/g, '_');
 
+    //exibicao da imagem
   const displayImageUrl =
     formData.imagemUrl
       ? formData.imagemUrl.startsWith('http') || formData.imagemUrl.startsWith('data:')

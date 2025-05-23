@@ -4,12 +4,12 @@ const router = express.Router();
 
 require('dotenv').config();
 
-// Substitua isso por uma senha segura vinda do seu banco ou config
-const SENHA_CORRETA = process.env.SENHA_LOGIN;
+const SENHA_CORRETA = process.env.SENHA_LOGIN; //le a senha correta pelo arquivo env
 
 router.post('/login', (req, res) => {
   const { senha } = req.body;
 
+  // verificar se a senha foi de fato enviada
   if (!senha) {
     return res.status(400).json({ error: 'Senha é obrigatória' });
   }
@@ -18,7 +18,7 @@ router.post('/login', (req, res) => {
     return res.status(401).json({ error: 'Senha incorreta' });
   }
 
-  // Cria o token com 1 hora de validade
+  // Cria o token com 1h de validade
   const token = jwt.sign({ acesso: 'autorizado' }, process.env.JWT_SECRET, {
     expiresIn: '1h',
   });

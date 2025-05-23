@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
+//definindo o tipo de objeto Recorte
 interface Recorte {
   id: string;
   chave: string;
@@ -20,14 +21,16 @@ interface Recorte {
 }
 
 export default function DashboardPage() {
-  const [recortes, setRecortes] = useState<Recorte[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [busca, setBusca] = useState('');
-  const router = useRouter();
+  const [recortes, setRecortes] = useState<Recorte[]>([]); // lista de recortes
+  const [isLoading, setIsLoading] = useState(true); //estado de carregamento
+  const [busca, setBusca] = useState(''); //termo de busca
+  const router = useRouter(); //roteador da navegaçao
 
+  // busca os recortes da API
   useEffect(() => {
     async function fetchRecortes() {
       try {
+        // Recupera o token salvo no navegador
         const token = localStorage.getItem('token');
 
         const res = await fetch('http://localhost:4000/recortes', {
@@ -42,6 +45,7 @@ export default function DashboardPage() {
 
         const data = await res.json();
 
+        // Verifica se os dados recebidos não são um array
         if (!Array.isArray(data)) {
           throw new Error('Formato de resposta inválido');
         }
@@ -50,6 +54,7 @@ export default function DashboardPage() {
       } catch {
         setRecortes([]);
       } finally {
+        // Independentemente do resultado, marca o carregamento como finalizado
         setIsLoading(false);
       }
     }
@@ -57,11 +62,14 @@ export default function DashboardPage() {
     fetchRecortes();
   }, []);
 
+  // Quando o usuário clicar em uma peça para editar
   const handleRowClick = (id: string) => {
     router.push(`/dashboard/pecas/${id}`);
   };
 
+  // Botao de exclusao
   const handleDelete = async (id: string) => {
+
     const confirmDelete = window.confirm('Tem certeza que deseja excluir este recorte?');
     if (!confirmDelete) return;
 
@@ -79,6 +87,7 @@ export default function DashboardPage() {
         throw new Error('Erro ao excluir recorte');
       }
 
+      // Remove o item da lista apos a exclusao no back
       setRecortes((prev) => prev.filter((r) => r.id !== id));
     } catch (error) {
       console.error('Erro ao excluir recorte:', error);
@@ -86,6 +95,7 @@ export default function DashboardPage() {
     }
   };
 
+  // Filtro de busca
   const recortesFiltrados = recortes.filter((r) =>
     r.chave.toLowerCase().includes(busca.toLowerCase()) ||
     r.sku.toLowerCase().includes(busca.toLowerCase()) ||
