@@ -13,6 +13,7 @@ const prisma = new PrismaClient();
 
 app.use(cors());
 app.use(express.json());
+
 app.use('/upload', uploadRoutes);
 app.use('/', authRoutes);
 app.use('/recortes', recortesRoutes);

@@ -1,40 +1,43 @@
 const express = require('express');
+const router = express.Router();
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
-const bucket = require('../firebase');
+const cloudinary = require('../config/cloudinary');
 
-const router = express.Router();
+// Multer para armazenar arquivo na memória
 const upload = multer({ storage: multer.memoryStorage() });
 
 router.post('/', upload.single('imagem'), async (req, res) => {
   try {
     const file = req.file;
-    if (!file) {
-      return res.status(400).json({ error: 'Imagem é obrigatória' });
-    }
+    if (!file) return res.status(400).json({ error: 'Arquivo não enviado' });
 
-    const nomeArquivo = `${uuidv4()}-${file.originalname}`;
-    const blob = bucket.file(`assets/${nomeArquivo}`);
+    const nomeArquivo = `assets/${uuidv4()}-${file.originalname}`;
 
-    const blobStream = blob.createWriteStream({
-      resumable: false,
-      metadata: { contentType: file.mimetype },
-    });
+    // Função para upload via stream com Promise
+    const uploadStream = () => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream(
+          {
+            folder: 'fanation',
+            public_id: nomeArquivo,
+            resource_type: 'image',
+          },
+          (error, result) => {
+            if (error) reject(error);
+            else resolve(result);
+          }
+        );
+        stream.end(file.buffer);
+      });
+    };
 
-    blobStream.on('error', (err) => {
-      console.error(err);
-      res.status(500).json({ error: 'Erro ao fazer upload da imagem' });
-    });
+    const resultado = await uploadStream();
 
-    blobStream.on('finish', () => {
-      const imagemUrl = `https://storage.googleapis.com/${bucket.name}/assets/${nomeArquivo}`;
-      res.status(200).json({ imageUrl: imagemUrl });
-    });
-
-    blobStream.end(file.buffer);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Erro interno no servidor' });
+    return res.status(200).json({ imagemUrl: resultado.secure_url });
+  } catch (err) {
+    console.error('Erro geral no upload:', err);
+    res.status(500).json({ error: 'Erro interno ao fazer upload' });
   }
 });
 

@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import RecorteForm from '@/components/RecorteForm';
-import { FormDataRecorte } from '@/services/recortes';
+import { FormDataRecorte, createRecorte } from '@/services/recortes';
 
 export default function NovaPecaPage() {
   const router = useRouter();
@@ -10,17 +10,11 @@ export default function NovaPecaPage() {
   const handleSubmit = async (data: FormDataRecorte) => {
     const token = localStorage.getItem('token');
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_API_URL}/recortes`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
-      });
+      await createRecorte(data, token ?? undefined);
       router.push('/dashboard');
     } catch (error) {
       console.error('Erro ao criar recorte:', error);
+      alert('Erro ao criar peça. Veja o console para detalhes.');
     }
   };
 
