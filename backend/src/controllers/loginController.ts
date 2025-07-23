@@ -1,15 +1,15 @@
+import { RequestHandler } from "express";
+
 const express = require('express');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 
 require('dotenv').config();
+export const loginController:RequestHandler = ( req,res ) => {
 
-const SENHA_CORRETA = process.env.SENHA_LOGIN; //le a senha correta pelo arquivo env
-
-router.post('/login', (req, res) => {
   const { senha } = req.body;
+  const SENHA_CORRETA = process.env.SENHA_LOGIN; //le a senha correta pelo arquivo env
 
-  // verificar se a senha foi de fato enviada
   if (!senha) {
     return res.status(400).json({ error: 'Senha é obrigatória' });
   }
@@ -24,6 +24,4 @@ router.post('/login', (req, res) => {
   });
 
   res.json({ token });
-});
-
-module.exports = router;
+}

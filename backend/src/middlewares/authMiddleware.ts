@@ -1,6 +1,9 @@
-const jwt = require('jsonwebtoken');
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
+import { RequestHandler } from "express";
+dotenv.config();
 
-function autenticarToken(req, res, next) {
+export const autenticarToken:RequestHandler = (req, res, next) => {
   const authHeader = req.headers['authorization'];
   const token = authHeader && authHeader.split(' ')[1];
 
