@@ -36,10 +36,9 @@ export default function MontagemPage() {
         });
 
         if (!res.ok) throw new Error(`Erro ao buscar recortes: ${res.status}`);
+
         const data = await res.json();
-        if (!Array.isArray(data)) throw new Error('Formato de resposta inválido');
-        console.log('Recortes:', data);
-        setRecortes(data);
+        setRecortes(data.recortes);
       } catch {
         setRecortes([]);
       } finally {

@@ -71,8 +71,9 @@ export default function RecorteForm({ onSubmit, initialData }: RecorteFormProps)
       //atualiza o campo imagemUTL com a URL do back
       setFormData(prev => ({
         ...prev,
-        imagemUrl: data.imageUrl || data.imagemUrl || '',
+        imagemUrl: data.resultado?.secure_url || '',
       }));
+
     } catch (error) {
       console.error(error);
       alert('Erro ao enviar a imagem. Veja o console para detalhes.');

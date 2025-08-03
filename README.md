@@ -69,7 +69,7 @@ JWT_SECRET=sua_chave_secreta
 
 Exemplo - front-end/.env:
 
-NEXT_PUBLIC_API_URL=http://localhost:5000
+NEXT_PUBLIC_API_URL=http://localhost:4000
 
 4. Inicie os servidores
 

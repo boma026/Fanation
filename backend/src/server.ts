@@ -7,7 +7,8 @@ import { router } from "./router/routes";
 dotenv.config();
 const server = express();
 server.use(helmet());
-server.use(cors({origin: "https://localhost:3000"}));
+server.use(express.json())
+server.use(cors({origin: "http://localhost:3000"}));
 
 server.use("/", router);
 

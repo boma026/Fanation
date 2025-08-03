@@ -1,20 +1,14 @@
-const express = require('express');
-const router = express.Router();
-const multer = require('multer');
-const { v4: uuidv4 } = require('uuid');
-const cloudinary = require('../../config/cloudinary');
+import { RequestHandler } from "express";
+import { v4 as uuidv4 } from "uuid";
+import cloudinary from "../config/cloudinary";
 
-// Multer para armazenar arquivo na memória
-const upload = multer({ storage: multer.memoryStorage() });
-
-router.post('/', upload.single('imagem'), async (req, res) => {
+export const uploadImagemController:RequestHandler = async (req,res) => {
   try {
     const file = req.file;
     if (!file) return res.status(400).json({ error: 'Arquivo não enviado' });
 
     const nomeArquivo = `assets/${uuidv4()}-${file.originalname}`;
 
-    // Função para upload via stream com Promise
     const uploadStream = () => {
       return new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
@@ -33,12 +27,10 @@ router.post('/', upload.single('imagem'), async (req, res) => {
     };
 
     const resultado = await uploadStream();
+    res.status(200).json({ message: 'Upload feito com sucesso', resultado });
 
-    return res.status(200).json({ imagemUrl: resultado.secure_url });
-  } catch (err) {
-    console.error('Erro geral no upload:', err);
-    res.status(500).json({ error: 'Erro interno ao fazer upload' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Erro ao fazer upload da imagem' });
   }
-});
-
-module.exports = router;
+}

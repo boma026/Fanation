@@ -1,13 +1,11 @@
 import { RequestHandler } from "express";
+import dotenv from "dotenv";
+import jwt from "jsonwebtoken";
 
-const express = require('express');
-const jwt = require('jsonwebtoken');
-const router = express.Router();
-
-require('dotenv').config();
+dotenv.config();
 export const loginController:RequestHandler = ( req,res ) => {
 
-  const { senha } = req.body;
+  const senha = req.body.senha;
   const SENHA_CORRETA = process.env.SENHA_LOGIN; //le a senha correta pelo arquivo env
 
   if (!senha) {
@@ -19,7 +17,7 @@ export const loginController:RequestHandler = ( req,res ) => {
   }
 
   // Cria o token com 1h de validade
-  const token = jwt.sign({ acesso: 'autorizado' }, process.env.JWT_SECRET, {
+  const token = jwt.sign({ acesso: 'autorizado' }, process.env.JWT_SECRET as string, {
     expiresIn: '1h',
   });
 

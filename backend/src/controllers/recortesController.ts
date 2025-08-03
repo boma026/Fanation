@@ -33,14 +33,14 @@ export const getRecorteController:RequestHandler = async (req, res ) => {
 export const postRecortesController:RequestHandler = async (req,res) => {
   
   const data:Recortes = req.body;
+  const chave = createKey(data.tipoRecorte, data.nomeModelo, data.material, data.cor);
+  data.chave = chave;
+  console.log(data);
 
-  if(!data.ativo || !data.chave || !data.cor || !data.imagemUrl || !data.material || !data.nomeModelo || !data.ordemExibicao || !data.posicao || !data.sku || !data.tipoProduto || !data.tipoRecorte) {
+  if(!data.ativo || !data.chave || !data.cor || !data.imagemUrl || !data.material || !data.nomeModelo || !data.ordemExibicao || !data.sku || !data.tipoRecorte) {
     return res.status(400).json({error: "Dados faltantes na requisiçao"})
   }
   
-  const chave = createKey(data.tipoRecorte, data.nomeModelo, data.material, data.cor);
-  data.chave = chave;
-
   try {
     const novoRecorte = await createRecorteService(data);
     res.status(201).json(novoRecorte);

@@ -44,13 +44,8 @@ export default function DashboardPage() {
         }
 
         const data = await res.json();
-
-        // Verifica se os dados recebidos não são um array
-        if (!Array.isArray(data)) {
-          throw new Error('Formato de resposta inválido');
-        }
-
-        setRecortes(data);
+                
+        setRecortes(data.recortes);
       } catch {
         setRecortes([]);
       } finally {
@@ -60,6 +55,7 @@ export default function DashboardPage() {
     }
 
     fetchRecortes();
+    console.log(recortes);
   }, []);
 
   // Quando o usuário clicar em uma peça para editar
